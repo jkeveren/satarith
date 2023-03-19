@@ -9,5 +9,5 @@ Saturation Arithmatic
 TODO:
 - Add limit argument overload so a limit can be spcified instead of just using this to prevent overflow.
 - Add Subtract function for more unsigned type usefulness. (Currently you cannot subtract signed types because you have to use add with inverted b parameter).
-- Add divide function. FLT_MAX / 0.1, INT_MIN / -1.
+- Add divide function. FLT_MAX / 0.1 == FLT_MAX * 10, INT_MIN / -1 == INT_MAX + 1.
 
