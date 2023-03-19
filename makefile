@@ -1,14 +1,19 @@
 CC = g++
-CFLAGS += -Wall -Wextra -Werror -pedantic -Iinclude
+CFLAGS = -Wall -Wextra -Werror -pedantic -Iinclude
 
-build/test: test/test.cpp $(wildcard test/*) build
-	$(CC) $(CFLAGS) -o $@ $<
+ifneq ($(ALL_TYPES), false)
+CFLAGS += -DALL_TYPES
+endif
+
+build/test: test/test.cpp $(wildcard test/*) makefile build
+	$(CC) $(CFLAGS) -o $@ $< \
+	# Comiling templates...
 	chmod u+x build/test
 
-build/example: example/example.cpp build
+build/example: example/example.cpp makefile build
 	$(CC) $(CFLAGS) -o $@ $<
 
-build: 
+build:
 	mkdir -p $@
 
 .PHONY: test

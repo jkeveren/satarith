@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# Run this script and pipe the output to entr or whichever file change watcher you use.
+
+find -iname "*.cpp" -o -iname "*.hpp" -o -iname "makefile"
