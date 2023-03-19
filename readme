@@ -1,0 +1,13 @@
+Saturation Arithmatic
+
++, -, *, / functions who's result does not surpass upper and lower limits.
+- Overflow safe! Surpassing a limit is predicted before completing the operation instead trying the operation and checking if a limit was surpassed or overflow occurred.
+- Hundreds of table driven tests!
+- Header only! (This might change/have changed already and I forgor to update this (Check if there's a src directory)).
+- Currently the limits are not parametric but instead fixed to the min and max value of the type.
+
+TODO:
+- Add limit argument overload so a limit can be spcified instead of just using this to prevent overflow.
+- Add Subtract function for more unsigned type usefulness. (Currently you cannot subtract signed types because you have to use add with inverted b parameter).
+- Add divide function. FLT_MAX / 0.1, INT_MIN / -1.
+

@@ -22,6 +22,11 @@ namespace satarith {
 		return a + b;
 	}
 
+	// template<typename T>
+	// T subtract(T a, T b) {
+	// 	return a - b;
+	// }
+
 	template<typename T>
 	T multiply(T a, T b) {
 		// Predict overflow
