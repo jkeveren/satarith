@@ -2,10 +2,10 @@
 
 namespace satarith_test {
 	template<typename T>
-	class Tester {
+	struct Tester {
 		using table = std::vector<struct record<T>>;
 
-		void test_function(T (*function)(T a, T b), std::string function_name, table tests, table negative_tests) {
+		void test_function(T (*function)(T, T), std::string function_name, table tests, table negative_tests) {
 			// Add negative tests to tests unless type is unsigned.
 			if (!is_unsigned<T>::value) {
 				tests.insert(tests.end(), negative_tests.begin(), negative_tests.end());
@@ -23,7 +23,6 @@ namespace satarith_test {
 			}
 		}
 
-	public:
 		void add() {
 			T min = numeric_limits<T>::lowest();
 			T max = numeric_limits<T>::max();
@@ -57,7 +56,7 @@ namespace satarith_test {
 		
 		// void subtract() {
 		// 	T min = numeric_limits<T>::lowest();
-		// 	// T max = numeric_limits<T>::max();
+		// 	T max = numeric_limits<T>::max();
 
 		// 	table tests = {
 		// 		// Non-overflow
@@ -66,7 +65,7 @@ namespace satarith_test {
 
 		// 		// Overflow
 		// 		{{min, 1}, min},
-		// 		// {{1, max}, max},
+		// 		{{1, max}, max},
 		// 	};
 			
 		// 	// Ignore narrowing warning for negative tests because they are not run for unsigned types.
@@ -83,7 +82,7 @@ namespace satarith_test {
 		// 	};
 		// 	#pragma GCC diagnostic pop
 
-		// 	test_function<T>(satarith::subtract<T>, "subtract", tests, negative_tests);
+		// 	test_function(satarith::subtract<T>, "subtract", tests, negative_tests);
 		// }
 
 		void multiply() {
@@ -140,6 +139,7 @@ namespace satarith_test {
 		Tester<T> tester = Tester<T>();
 		tester.add();
 		tester.multiply();
+		// tester.subtract();
 	}
 
 	void test() {

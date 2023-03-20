@@ -7,7 +7,6 @@ using namespace std;
 namespace satarith {
 	template<typename T>
 	T add(T a, T b) {
-
 		T max = numeric_limits<T>::max();
 		if (b > 0 && max - b < a) {
 			return max;
