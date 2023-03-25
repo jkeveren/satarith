@@ -12,7 +12,6 @@ namespace satarith {
 			return max;
 		}
 
-		// numeric_limits<float>::min() returns ~0 which is not the minimum possible value.
 		T min = numeric_limits<T>::lowest();
 		if (b < 0 && min - b > a) {
 			return min;
@@ -21,10 +20,20 @@ namespace satarith {
 		return a + b;
 	}
 
-	// template<typename T>
-	// T subtract(T a, T b) {
-	// 	return a - b;
-	// }
+	template<typename T>
+	T subtract(T a, T b) {
+		T min = numeric_limits<T>::lowest();
+		if (b > 0 && min + b > a) {
+			return min;
+		}
+
+		T max = numeric_limits<T>::max();
+		if (b < 0 && max + b < a) {
+			return max;
+		}
+
+		return a - b;
+	}
 
 	template<typename T>
 	T multiply(T a, T b) {
@@ -36,7 +45,7 @@ namespace satarith {
 			return max;
 		}
 
-		// numeric_limits<float>::min() returns ~0 which is not the minimum possible value.
+		// numeric_limits<float>::min() returns ~0 which is not the lowest possible value.
 		T min = numeric_limits<T>::lowest();
 
 		// a positive

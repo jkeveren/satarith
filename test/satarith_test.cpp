@@ -4,21 +4,22 @@ namespace satarith_test {
 	template<typename T>
 	struct Tester {
 		using table = std::vector<struct record<T>>;
+		std::string type_string;
 
 		void test_function(T (*function)(T, T), std::string function_name, table tests, table negative_tests) {
-			// Add negative tests to tests unless type is unsigned.
+			// Add negative_tests to tests unless type is unsigned.
 			if (!is_unsigned<T>::value) {
 				tests.insert(tests.end(), negative_tests.begin(), negative_tests.end());
 			}
 
-			std::string type_name = static_cast<std::string>(typeid(T).name());
+			// std::string type_name = static_cast<std::string>(typeid(T).name());
 
 			for (int i = 0; i < static_cast<int>(tests.size()); i++) {
 				struct record<T> record = tests[i];
 
 				T got = function(record.args[0], record.args[1]);
 
-				string name = function_name + "<" + type_name + ">(" + to_string(record.args[0]) + ", " + to_string(record.args[1]) + ")";
+				string name = function_name + "<" + type_string + ">(" + to_string(record.args[0]) + ", " + to_string(record.args[1]) + ")";
 				test<T>(name, got == record.want, got, record.want);
 			}
 		}
@@ -54,36 +55,35 @@ namespace satarith_test {
 			test_function(satarith::add<T>, "add", tests, negative_tests);
 		}
 		
-		// void subtract() {
-		// 	T min = numeric_limits<T>::lowest();
-		// 	T max = numeric_limits<T>::max();
+		void subtract() {
+			T min = numeric_limits<T>::lowest();
+			T max = numeric_limits<T>::max();
 
-		// 	table tests = {
-		// 		// Non-overflow
-		// 		{{5, 1}, 4},
-		// 		{{10, 5}, 5},
+			table tests = {
+				// Non-overflow
+				{{5, 1}, 4},
+				{{10, 5}, 5},
 
-		// 		// Overflow
-		// 		{{min, 1}, min},
-		// 		{{1, max}, max},
-		// 	};
+				// Overflow
+				{{min, 1}, min},
+			};
 			
-		// 	// Ignore narrowing warning for negative tests because they are not run for unsigned types.
-		// 	#pragma GCC diagnostic push
-		// 	#pragma GCC diagnostic ignored "-Wnarrowing"
-		// 	table negative_tests = {
-		// 		// // Non-overflow
-		// 		// {{-1, 1}, 0},
-		// 		// {{1, -1}, 0},
+			// Ignore narrowing warning for negative tests because they are not run for unsigned types.
+			#pragma GCC diagnostic push
+			#pragma GCC diagnostic ignored "-Wnarrowing"
+			table negative_tests = {
+				// Non-overflow
+				{{-1, 1}, -2},
+				{{1, -1}, 2},
 
-		// 		// // Overflow
-		// 		// {{-1, min}, min},
-		// 		// {{min, -1}, min},
-		// 	};
-		// 	#pragma GCC diagnostic pop
+				// Overflow
+				{{-1, max}, min},
+				{{min, 1}, min},
+			};
+			#pragma GCC diagnostic pop
 
-		// 	test_function(satarith::subtract<T>, "subtract", tests, negative_tests);
-		// }
+			test_function(satarith::subtract<T>, "subtract", tests, negative_tests);
+		}
 
 		void multiply() {
 			T min = numeric_limits<T>::lowest();
@@ -107,6 +107,7 @@ namespace satarith_test {
 				{{3, max_2}, max},
 			};
 			
+			// Ignore narrowing warning for negative tests because they are not run for unsigned types.
 			#pragma GCC diagnostic push
 			#pragma GCC diagnostic ignored "-Wnarrowing"
 			table negative_tests = {
@@ -135,35 +136,36 @@ namespace satarith_test {
 	};
 
 	template<typename T>
-	void test() {
-		Tester<T> tester = Tester<T>();
+	void test(std::string type_string) {
+		Tester<T> tester = {type_string};
 		tester.add();
 		tester.multiply();
-		// tester.subtract();
+		tester.subtract();
 	}
 
 	void test() {
-		test<int>();
-		test<unsigned int>();
-		test<float>();
+		test<signed int>("signed int");
+		test<unsigned int>("unsigned int");
+		test<float>("float");
 
-		// Comment these out while developing for improved compile times.
+		// Test all numeric types.
+		// Probably redundant but worth making sure.
 		#ifdef ALL_TYPES
 			// Print this here instead of from makefile just in case something is misconfigured. I want to print what is actually happening not what I'm trying to do.
 			std::puts("Compiled tests for all types. (make test ALL_TYPES=false [-B] to disable)");
 
-			test<char>();
-			test<unsigned char>();
-			test<short int>();
-			test<unsigned short int>();
-			test<long int>();
-			test<unsigned long int>();
-			test<long long int>();
-			test<unsigned long long int>();
-			test<double>();
-			test<long double>();
+			test<signed char>       ("signed char");
+			test<unsigned char>     ("unsigned char");
+			test<signed short>      ("signed short");
+			test<unsigned short>    ("unsigned short");
+			test<signed long>       ("signed long");
+			test<unsigned long>     ("unsigned long");
+			test<signed long long>  ("signed long long");
+			test<unsigned long long>("unsigned long long");
+			test<double>            ("double");
+			test<long double>       ("long double");
 		#else
-			puts("Warning: Only compiled tests for some types to save compile time. To disable this ensure make is not invoked with ALL_TYPES=false. You'll need to use make -B to force the update.");
+			std::puts("Warning: Only compiled tests for some types to save compile time. To disable this ensure make is not invoked with ALL_TYPES=false. You'll need to use make -B to force the update.");
 		#endif
 	}
 }

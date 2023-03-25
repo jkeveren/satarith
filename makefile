@@ -16,6 +16,9 @@ build/example: example/example.cpp include/satarith.hpp makefile build
 build:
 	mkdir -p $@
 
-.PHONY: test
+.PHONY: test example
 test: build/test
 	./build/test
+
+example: build/example
+	./build/example

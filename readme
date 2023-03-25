@@ -8,5 +8,11 @@ Saturation Arithmatic
 
 TODO:
 - Add limit argument overload so a limit can be spcified instead of just using this to prevent overflow.
-- Add Subtract function for more unsigned type usefulness. (Currently you cannot subtract signed types because you have to use add with inverted b parameter).
 - Add divide function. FLT_MAX / 0.1 == FLT_MAX * 10, INT_MIN / -1 == INT_MAX + 1.
+
+Recommanded development command:
+./list_watch_files | entr -cs "make test 2>&1 | head -n 40"
+- List files to watch for changes
+- Use entr to watch for changes on those file and run commands:
+	- make test
+	- Pipe std{out,err} to head so we see the first errors and don't need to scroll.
